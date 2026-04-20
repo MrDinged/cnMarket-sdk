@@ -31,6 +31,8 @@ export {
   MINT_PRICES,
   RARITY_LABELS,
   RARITY_COLORS,
+  isValidAddress,
+  parseRarity,
 } from "./types";
 export type {
   Address,

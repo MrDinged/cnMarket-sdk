@@ -76,3 +76,20 @@ export interface NFTToken {
   rarity: Rarity;
   tokenURI: string;
 }
+
+/** Returns true if the string is a valid checksummed or lowercase Ethereum address */
+export function isValidAddress(address: string): address is Address {
+  return /^0x[0-9a-fA-F]{40}$/.test(address);
+}
+
+/**
+ * Parse a raw uint8 rarity value from the contract into the Rarity enum.
+ * Throws if the value is out of range.
+ */
+export function parseRarity(raw: number | bigint): Rarity {
+  const n = Number(raw);
+  if (n === Rarity.Common) return Rarity.Common;
+  if (n === Rarity.Rare) return Rarity.Rare;
+  if (n === Rarity.Legendary) return Rarity.Legendary;
+  throw new RangeError(`Unknown rarity value: ${n}`);
+}
