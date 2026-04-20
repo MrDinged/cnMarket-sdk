@@ -65,6 +65,7 @@ export {
   useClipboard,
   useNFTSupply,
   useActiveListings,
+  useWalletConnection,
   truncateAddress,
   formatCELO,
   formatListingPrice,

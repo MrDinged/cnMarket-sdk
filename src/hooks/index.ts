@@ -175,3 +175,51 @@ export function useActiveListings(
 
   return { listings, isLoading, error, refresh: fetch };
 }
+
+export interface WalletConnectionState {
+  address: string | null;
+  isConnected: boolean;
+  isMiniPay: boolean;
+  connect: () => Promise<void>;
+  disconnect: () => void;
+}
+
+/**
+ * Lightweight wallet connection hook that auto-connects in MiniPay.
+ * Wraps window.ethereum directly — no wagmi dependency required.
+ *
+ * @example
+ * ```tsx
+ * const { address, isMiniPay, connect } = useWalletConnection();
+ * ```
+ */
+export function useWalletConnection(): WalletConnectionState {
+  const [address, setAddress] = useState<string | null>(null);
+
+  const eth = typeof window !== "undefined"
+    ? (window as Window & { ethereum?: { isMiniPay?: boolean; request: (args: { method: string; params?: unknown[] }) => Promise<unknown> } }).ethereum
+    : undefined;
+
+  const isMiniPay = Boolean(eth?.isMiniPay);
+  const isConnected = !!address;
+
+  useEffect(() => {
+    if (!eth) return;
+    eth.request({ method: "eth_accounts" })
+      .then((accounts) => {
+        const list = accounts as string[];
+        if (list.length > 0) setAddress(list[0]);
+      })
+      .catch(() => {});
+  }, [eth]);
+
+  const connect = useCallback(async () => {
+    if (!eth) return;
+    const accounts = await eth.request({ method: "eth_requestAccounts" }) as string[];
+    if (accounts.length > 0) setAddress(accounts[0]);
+  }, [eth]);
+
+  const disconnect = useCallback(() => setAddress(null), []);
+
+  return { address, isConnected, isMiniPay, connect, disconnect };
+}
