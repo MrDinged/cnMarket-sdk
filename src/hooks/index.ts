@@ -93,3 +93,44 @@ export function formatListingPrice(priceWei: bigint): string {
 export function formatMintPrice(priceWei: bigint, rarityLabel: string): string {
   return `${rarityLabel} — ${formatCELO(priceWei, 4)}`;
 }
+
+export interface NFTSupplyState {
+  totalSupply: bigint | undefined;
+  isLoading: boolean;
+  error: Error | null;
+  refresh: () => void;
+}
+
+/**
+ * Hook to poll the total NFT supply at a given interval.
+ *
+ * @example
+ * ```tsx
+ * const { totalSupply, isLoading } = useNFTSupply(client, 10_000);
+ * ```
+ */
+export function useNFTSupply(
+  client: { getTotalSupply: () => Promise<bigint> } | null,
+  intervalMs = 15_000
+): NFTSupplyState {
+  const [totalSupply, setTotalSupply] = useState<bigint | undefined>(undefined);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<Error | null>(null);
+
+  const fetch = useCallback(async () => {
+    if (!client) return;
+    try {
+      const supply = await client.getTotalSupply();
+      setTotalSupply(supply);
+      setError(null);
+    } catch (e) {
+      setError(e instanceof Error ? e : new Error(String(e)));
+    } finally {
+      setIsLoading(false);
+    }
+  }, [client]);
+
+  usePolling(fetch, intervalMs, !!client);
+
+  return { totalSupply, isLoading, error, refresh: fetch };
+}

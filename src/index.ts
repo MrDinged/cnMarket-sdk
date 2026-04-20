@@ -61,6 +61,7 @@ export {
   useMiniPayDetect,
   usePolling,
   useClipboard,
+  useNFTSupply,
   truncateAddress,
   formatCELO,
   formatListingPrice,
