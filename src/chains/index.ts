@@ -24,7 +24,16 @@ export const celoAlfajores: ChainConfig = {
   testnet: true,
 };
 
-export const SUPPORTED_CHAINS = [celoMainnet, celoAlfajores] as const;
+export const celoBaklava: ChainConfig = {
+  id: 62320,
+  name: "Celo Baklava Testnet",
+  rpcUrl: "https://baklava-forno.celo-testnet.org",
+  explorerUrl: "https://baklava-blockscout.celo-testnet.org",
+  nativeCurrency: { name: "CELO", symbol: "CELO", decimals: 18 },
+  testnet: true,
+};
+
+export const SUPPORTED_CHAINS = [celoMainnet, celoAlfajores, celoBaklava] as const;
 
 export function getChainById(chainId: number): ChainConfig | undefined {
   return SUPPORTED_CHAINS.find((c) => c.id === chainId);
