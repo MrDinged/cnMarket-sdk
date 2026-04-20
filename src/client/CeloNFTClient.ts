@@ -70,6 +70,17 @@ export class CeloNFTClient {
     }) as PublicClient;
   }
 
+  /** Returns the current SDK config (addresses, rpcUrl) */
+  getConfig(): Readonly<CeloNFTSDKConfig> {
+    return Object.freeze({ ...this.config });
+  }
+
+  /** Returns true if the configured RPC URL points to a testnet */
+  isTestnet(): boolean {
+    const rpcUrl = this.config.rpcUrl ?? celoMainnet.rpcUrl;
+    return rpcUrl.includes("alfajores") || rpcUrl.includes("baklava");
+  }
+
   // ─── NFT Read Methods ────────────────────────────────────────────────────
 
   async getTotalSupply(): Promise<bigint> {
