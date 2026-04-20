@@ -18,6 +18,7 @@ import {
   type NFTToken,
 } from "../types";
 import { celoMainnet } from "../chains";
+import { NoProviderError } from "../errors";
 
 const celoViemChain = {
   id: 42220,
@@ -209,7 +210,7 @@ export class CeloNFTClient {
       throw new Error("mintNFT requires a browser environment with window.ethereum");
     }
     const eth = (window as Window & { ethereum?: unknown }).ethereum as { request: (...args: unknown[]) => Promise<unknown> };
-    if (!eth) throw new Error("No Ethereum provider found");
+    if (!eth) throw new NoProviderError();
 
     const walletClient = createWalletClient({
       chain: celoViemChain,
@@ -236,7 +237,7 @@ export class CeloNFTClient {
   async listNFT(tokenId: bigint, price: bigint): Promise<Hash> {
     if (typeof window === "undefined") throw new Error("Browser environment required");
     const eth = (window as Window & { ethereum?: unknown }).ethereum as { request: (...args: unknown[]) => Promise<unknown> };
-    if (!eth) throw new Error("No Ethereum provider found");
+    if (!eth) throw new NoProviderError();
 
     const walletClient = createWalletClient({
       chain: celoViemChain,
@@ -260,7 +261,7 @@ export class CeloNFTClient {
   async buyNFT(tokenId: bigint, price: bigint): Promise<Hash> {
     if (typeof window === "undefined") throw new Error("Browser environment required");
     const eth = (window as Window & { ethereum?: unknown }).ethereum as { request: (...args: unknown[]) => Promise<unknown> };
-    if (!eth) throw new Error("No Ethereum provider found");
+    if (!eth) throw new NoProviderError();
 
     const walletClient = createWalletClient({
       chain: celoViemChain,
@@ -285,7 +286,7 @@ export class CeloNFTClient {
   async cancelListing(tokenId: bigint): Promise<Hash> {
     if (typeof window === "undefined") throw new Error("Browser environment required");
     const eth = (window as Window & { ethereum?: unknown }).ethereum as { request: (...args: unknown[]) => Promise<unknown> };
-    if (!eth) throw new Error("No Ethereum provider found");
+    if (!eth) throw new NoProviderError();
 
     const walletClient = createWalletClient({
       chain: celoViemChain,
