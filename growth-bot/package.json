@@ -1,0 +1,14 @@
+{
+  "name": "cnmarket-growth-bot",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Install and smoke-check @phessophissy/cnmarket-sdk",
+  "type": "module",
+  "main": "index.js",
+  "dependencies": {
+    "@phessophissy/cnmarket-sdk": "latest"
+  },
+  "scripts": {
+    "start": "node index.js"
+  }
+}
